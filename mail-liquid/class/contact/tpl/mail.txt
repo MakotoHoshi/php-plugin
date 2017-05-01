@@ -1,0 +1,12 @@
+お問合せが届きました
+
+[:::contact_type:::]
+[:::id:::]
+[:::mail:::]
+[:::tel:::]
+[:::postcode:::]
+[:::user:::]
+[:::gender:::]
+[:::pref:::]
+[:::transport:::]
+[:::contact:::]
