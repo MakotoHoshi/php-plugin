@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.0
+Version : 1.0.1
 */
 //メール文字化け防止
 mb_language('ja');
@@ -112,8 +112,15 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'confirm'){
 		$merge_value = '';
 		if(is_array($value)){
 			//配列の場合
+			$loop_count = 1;
+			$value_count = count($value);
 			foreach($value as $v){
-				$merge_value .= $v."<br>";
+				if($loop_count < $value_count){
+					$merge_value .= $v."<br>";
+				}else{
+					$merge_value .= $v;
+				}
+				$loop_count++;
 			}
 			$field .= $merge_value.'<input type="hidden" name="'.$key.'" value="'.$merge_value.'"></td>';
 		}else{
@@ -150,8 +157,7 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'send'){
 		}
 		//改行タグ変換
 		$value = str_replace("&lt;br&gt;", "\n", $value);
-		// $form_detail[$key]["label"] = preg_replace("/\<.+?\>/", "", $form_detail[$key]["label"]);
-		// $contents .= '['.$form_detail[$key]["label"].']　'.str_replace("<br>", "\n", $value)."\r\n";
+
 		//テンプレート置き換え
 		$mail_str = str_replace('[:::'.$key.':::]', $value, $mail_str);
 		$reply_str = str_replace('[:::'.$key.':::]', $value, $reply_str);
@@ -159,6 +165,9 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'send'){
 	//メール送信処理
 	$send_mail = mb_send_mail($mail_to, $mail_subject, $mail_str, $mail_header);
 	$send_reply = mb_send_mail($post_data['email'], $reply_subject, $reply_str, $mail_header);
+	print_r($mail_str);
+	print_r($reply_str);
+	exit();
 	//結果
 	if($send_mail && $send_reply){
 		//送信成功

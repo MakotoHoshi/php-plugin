@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.0
+Version : 1.0.1
 */
 class checker{
 	public function rule($post_data, $form_detail){
@@ -77,7 +77,7 @@ class checker{
 				*/
 				//チェックタイプのemailがtrueの場合のみ実行
 				if($key == 'email'){
-					if($form_detail[$key]["check_type"]["email"] === true){
+					if($form_detail[$key]["check_type"]["mail"] === true){
 						if(isset($value) || $value != ''){
 							if(!preg_match("/^[_a-z0-9-]+(\.[_a-z0-9-]+)*@[a-z0-9-]+([\.][a-z0-9-]+)+$/i", $value)){
 								//正しくない場合はエラーを返す

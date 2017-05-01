@@ -2,7 +2,7 @@
 
 [:::contact_type:::]
 [:::id:::]
-[:::mail:::]
+[:::email:::]
 [:::tel:::]
 [:::postcode:::]
 [:::user:::]

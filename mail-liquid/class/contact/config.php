@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.0
+Version : 1.0.1
 
 ■mail_toについて
 メールの送信先です。
@@ -81,8 +81,8 @@ class config{
 		'email'=>array(
 			'label' =>  'メール',
 			'type'  =>  'text',
-			'name'  =>  'mail',
-			'id'    =>  'mail',
+			'name'  =>  'email',
+			'id'    =>  'email',
 			'check_type' => array(
 				'req'     => true,
 				'mail'    => true,
