@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.1
+Version : 1.0.2
 
 ■mail_toについて
 メールの送信先です。

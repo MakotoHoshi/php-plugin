@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.1
+Version : 1.0.2
 */
 //メール文字化け防止
 mb_language('ja');
@@ -122,10 +122,10 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'confirm'){
 				}
 				$loop_count++;
 			}
-			$field .= $merge_value.'<input type="hidden" name="'.$key.'" value="'.$merge_value.'"></td>';
+			$field .= $merge_value.'<input type="hidden" name="'.$key.'" value="'.$merge_value.'">';
 		}else{
 			//通常のデータ
-			$field .= $value.'<input type="hidden" name="'.$key.'" value="'.$value.'"></td>';
+			$field .= $value.'<input type="hidden" name="'.$key.'" value="'.$value.'">';
 		}
 		$html = str_replace('[:::'.$key.':::]', $field, $html);
 	}
@@ -165,9 +165,7 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'send'){
 	//メール送信処理
 	$send_mail = mb_send_mail($mail_to, $mail_subject, $mail_str, $mail_header);
 	$send_reply = mb_send_mail($post_data['email'], $reply_subject, $reply_str, $mail_header);
-	print_r($mail_str);
-	print_r($reply_str);
-	exit();
+
 	//結果
 	if($send_mail && $send_reply){
 		//送信成功
