@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.2
+Version : 1.0.3
 */
 //メール文字化け防止
 mb_language('ja');
@@ -16,6 +16,8 @@ $mail_to = $config->mail_to;
 $mail_subject = $config->mail_subject;
 $reply_subject = $config->reply_subject;
 $mail_header = $config->mail_header;
+$thanks_dir = $config->thanks_dir;
+$error_dir = $config->error_dir;
 $form_detail = $config->form_detail;
 
 //ポストデータ取得
@@ -163,16 +165,16 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'send'){
 		$reply_str = str_replace('[:::'.$key.':::]', $value, $reply_str);
 	}
 	//メール送信処理
-	$send_mail = mb_send_mail($mail_to, $mail_subject, $mail_str, $mail_header);
+	$send_mail = mb_send_mail($mail_to, $mail_subject, $mail_str, "From: ".$post_data['email']);
 	$send_reply = mb_send_mail($post_data['email'], $reply_subject, $reply_str, $mail_header);
 
 	//結果
 	if($send_mail && $send_reply){
 		//送信成功
-		header('location: /mail-liquid/contact/thanks.php');
+		header('location: '.$thanks_dir);
 	}else{
 		//送信失敗
-		header('location: /mail-liquid/contact/error.php');
+		header('location: '.$error_dir);
 	}
 }
 if(!isset($post_data['mode']) || !empty($is_error)){

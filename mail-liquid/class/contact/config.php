@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.2
+Version : 1.0.3
 
 ■mail_toについて
 メールの送信先です。
@@ -17,6 +17,12 @@ Version : 1.0.2
 ■mail_header
 メールヘッダです。
 From: xxx@xxx.com のフォーマットで入力してください。
+
+■thanks_dir
+送信完了ページ。
+
+■error_dir
+エラーページ。
 
 ■ チェックタイプについて
 5種類のチェックタイプがあり、trueにすると自動でチェックルールが実行されます。
@@ -40,6 +46,8 @@ class config{
 	public $mail_subject = 'メールが届きました';
 	public $reply_subject = '返信メール';
 	public $mail_header = 'From: noreply@example.com';
+	public $thanks_dir = '/mail-liquid/contact/thanks.php';
+	public $error_dir = '/mail-liquid/contact/error.php';
 
 	public $form_detail = array(
 		'contact_type'=>array(
