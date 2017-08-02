@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.3
+Version : 1.0.4
 
 ■mail_toについて
 メールの送信先です。
@@ -23,6 +23,9 @@ From: xxx@xxx.com のフォーマットで入力してください。
 
 ■error_dir
 エラーページ。
+
+■return_path
+リターンパス
 
 ■ チェックタイプについて
 5種類のチェックタイプがあり、trueにすると自動でチェックルールが実行されます。

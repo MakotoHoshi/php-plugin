@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.3
+Version : 1.0.4
 */
 //メール文字化け防止
 mb_language('ja');
