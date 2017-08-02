@@ -16,6 +16,7 @@ $mail_to = $config->mail_to;
 $mail_subject = $config->mail_subject;
 $reply_subject = $config->reply_subject;
 $mail_header = $config->mail_header;
+$return_path = $config->return_path;
 $thanks_dir = $config->thanks_dir;
 $error_dir = $config->error_dir;
 $form_detail = $config->form_detail;
@@ -166,7 +167,7 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'send'){
 	}
 	//メール送信処理
 	$send_mail = mb_send_mail($mail_to, $mail_subject, $mail_str, "From: ".$post_data['email']);
-	$send_reply = mb_send_mail($post_data['email'], $reply_subject, $reply_str, $mail_header);
+	$send_reply = mb_send_mail($post_data['email'], $reply_subject, $reply_str, $mail_header, $return_path);
 
 	//結果
 	if($send_mail && $send_reply){

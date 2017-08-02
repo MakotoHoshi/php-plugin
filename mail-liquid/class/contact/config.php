@@ -48,6 +48,7 @@ class config{
 	public $mail_header = 'From: noreply@example.com';
 	public $thanks_dir = '/mail-liquid/contact/thanks.php';
 	public $error_dir = '/mail-liquid/contact/error.php';
+	public $return_path = '-f noreply@example.com';
 
 	public $form_detail = array(
 		'contact_type'=>array(
