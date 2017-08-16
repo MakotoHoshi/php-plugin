@@ -2,13 +2,14 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.0.4
+Version : 1.1.0
 */
 //メール文字化け防止
 mb_language('ja');
 mb_internal_encoding('UTF-8');
 require dirname(__FILE__).'/checker.php';
 require dirname(__FILE__).'/config.php';
+require dirname(__FILE__).'/db.php';
 //出力系
 $config = new config();
 $html = $page_tpl;
@@ -20,6 +21,15 @@ $return_path = $config->return_path;
 $thanks_dir = $config->thanks_dir;
 $error_dir = $config->error_dir;
 $form_detail = $config->form_detail;
+
+//DB系
+$DB_CONTROL = new DB_CONTROL();
+$db_mode = $DB_CONTROL->db_mode;
+$db_host = $DB_CONTROL->db_host;
+$db_user = $DB_CONTROL->db_user;
+$db_pswd = $DB_CONTROL->db_pswd;
+$db_name = $DB_CONTROL->db_name;
+$tb_name = $DB_CONTROL->tb_name;
 
 //ポストデータ取得
 $post_data = array();
@@ -168,6 +178,22 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'send'){
 	//メール送信処理
 	$send_mail = mb_send_mail($mail_to, $mail_subject, $mail_str, "From: ".$post_data['email']);
 	$send_reply = mb_send_mail($post_data['email'], $reply_subject, $reply_str, $mail_header, $return_path);
+
+	if($db_mode == true){
+		//DB登録
+		$connection = mysql_connect($db_host, $db_user, $db_pswd);
+		mysql_select_db($db_name, $connection);
+		mysql_set_charset('utf8', $connection);
+		$table_scan = $DB_CONTROL->table_scan($db_name, $tb_name, $connection);
+		if($table_scan == false){
+			/*テーブル作成*/
+			$DB_CONTROL->build_table($tb_name, $post_data, $connection);
+		}
+		//レコード挿入
+		$DB_CONTROL->insert_record($tb_name, $post_data, $connection);
+
+		mysql_close($connection);
+	}
 
 	//結果
 	if($send_mail && $send_reply){
