@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.1.0
+Version : 1.1.1
 */
 //メール文字化け防止
 mb_language('ja');
@@ -190,7 +190,7 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'send'){
 			$DB_CONTROL->build_table($tb_name, $post_data, $connection);
 		}
 		//レコード挿入
-		$DB_CONTROL->insert_record($tb_name, $post_data, $connection);
+		$DB_CONTROL->insert_record($tb_name, $post_data, $form_detail, $connection);
 
 		mysql_close($connection);
 	}

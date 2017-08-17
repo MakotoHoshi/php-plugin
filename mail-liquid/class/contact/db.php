@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.1.0
+Version : 1.1.1
 */
 class DB_CONTROL{
 	/*DB許可*/
@@ -49,7 +49,7 @@ class DB_CONTROL{
 	}
 
 	/*レコード挿入*/
-	public function insert_record($tb_name, $post_data, $connection){
+	public function insert_record($tb_name, $post_data, $form_detail, $connection){
 		date_default_timezone_set('Asia/Tokyo');
 		$today = date('Y/m/d G:i:s');
 		$record = "";
@@ -71,7 +71,9 @@ class DB_CONTROL{
 				}elseif(strpos($sql_key, 'mode') !== false){
 					continue;
 				}else{
-					$record .= "'".$sql_value."',";
+					$sql_value_array = array($form_detail[$sql_key]['label'], $sql_value);
+					$serial = serialize($sql_value_array);
+					$record .= "'".$serial."',";
 				}
 			}
 		$record .= "'".$today."'";

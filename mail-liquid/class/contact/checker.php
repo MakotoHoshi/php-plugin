@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.1.0
+Version : 1.1.1
 */
 class checker{
 	public function rule($post_data, $form_detail){
