@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.1.1
+Version : 1.2.0
 
 ■mail_toについて
 メールの送信先です。
@@ -66,7 +66,7 @@ class config{
 				'address' => false,
 				'retype'  => false,
 			),
-			'disabled'=>'その他',
+			'disabled'=>array('その他'),
 			'example'=>'',
 			'option'=>  array(
 				'商品A',
@@ -249,7 +249,7 @@ class config{
 				'address' => false,
 				'retype'  => false,
 			),
-			'disabled'=>'その他',
+			'disabled'=>array('その他'),
 			'example'=>'',
 			'option'=>  array(
 				'バス',

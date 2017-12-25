@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.1.1
+Version : 1.2.0
 */
 //メール文字化け防止
 mb_language('ja');
@@ -45,14 +45,15 @@ $raw_post_data = $_POST;
 foreach($raw_post_data as $key => $value){
 	if(is_array($value)){
 		//配列の場合
-		foreach($value as $v){
-			$post_data[$key][] = htmlspecialchars($v);
+		foreach($value as $k => $v){
+			$post_data[$key][$k] = htmlspecialchars($v);
 		}
 	}else{
 		//通常のデータ
 		$post_data[$key] = htmlspecialchars($value);
 	}
 }
+
 
 //チェッカー読み込み
 $checker = new checker();
@@ -127,13 +128,25 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'confirm'){
 			//配列の場合
 			$loop_count = 1;
 			$value_count = count($value);
-			foreach($value as $v){
-				if($loop_count < $value_count){
-					$merge_value .= $v."<br>";
+
+			foreach($value as $k => $v){
+				if(!is_int($k)){
+					continue;
 				}else{
-					$merge_value .= $v;
+					if($loop_count < $value_count){
+						$merge_value .= $v;
+						if(isset($value[$v])){
+							$merge_value .= "(" . $value[$v] . ")";
+						}
+						$merge_value .= "<br>";
+					}else{
+						$merge_value .= $v;
+						if(isset($value[$v])){
+							$merge_value .= "(" . $value[$v] . ")";
+						}
+					}
+					$loop_count++;
 				}
-				$loop_count++;
 			}
 			$field .= $merge_value.'<input type="hidden" name="'.$key.'" value="'.$merge_value.'">';
 		}else{
@@ -175,6 +188,9 @@ if(isset($post_data['mode']) && $post_data['mode'] == 'send'){
 		$mail_str = str_replace('[:::'.$key.':::]', $value, $mail_str);
 		$reply_str = str_replace('[:::'.$key.':::]', $value, $reply_str);
 	}
+
+	print_r($mail_str);
+	print_r($reply_str);
 	//メール送信処理
 	$send_mail = mb_send_mail($mail_to, $mail_subject, $mail_str, "From: ".$post_data['email']);
 	$send_reply = mb_send_mail($post_data['email'], $reply_subject, $reply_str, $mail_header, $return_path);
@@ -232,30 +248,36 @@ if(!isset($post_data['mode']) || !empty($is_error)){
 			$field .= '<input type="hidden" id="'.$value["id"].'" name="'.$value["name"].'" value="">';
 			foreach($value['option'] as $ops){
 				$field .= '<input type="'.$value["type"].'" class="'.$value["id"].'" name="'.$value["name"].'[]" value="'.$ops.'"'.form_checked($post_data[$value["name"]],$ops).'>'.$ops.'<br>';
-			}
-			//disabled 入力項目
-			if($value['disabled'] != ''){
-				$field .= '<input type="text" class="disabled_'.$value["name"].'" id="'.$value["id"].'" name="'.$value["name"].'[]" value="'.get_disabled_data($post_data[$value["name"]]).'" disabled>';
-				$field .= "<script>
-				$(function(){
-					if($('input[value=\"".$value['disabled']."\"]:checked').length == 1){
-						if($('input.disabled_".$value['name']."').is(':disabled')){
-							$('input.disabled_".$value['name']."').prop('disabled', false);
-						}
-					}else{
-						$('input.disabled_".$value['name']."').val('');
-					}
-					$('input.".$value['id']."').change(function(){
-						if($('input[value=\"".$value['disabled']."\"]:checked').length == 1){
-							if($('input.disabled_".$value['name']."').is(':disabled')){
-								$('input.disabled_".$value['name']."').prop('disabled', false);
+				//disabled 入力項目
+				if($value['disabled'] != ''){
+					if(is_array($value['disabled'])){
+						foreach ($value['disabled'] as $disabled_k => $disabled_v) {
+							if($disabled_v == $ops){
+								$field .= '<input type="text" class="disabled_'.$value["name"].$disabled_k.'" id="'.$value["id"].$disabled_k.'" name="'.$value['name'].'['.$ops.']" value="'.get_disabled_data($post_data[$value["name"]]).'" disabled>';
+								$field .= "<script>
+								$(function(){
+									if($('input[value=\"".$disabled_v."\"].".$value['name'].":checked').length == 1){
+										if($('input.disabled_".$value['name'].$disabled_k."').is(':disabled')){
+											$('input.disabled_".$value['name'].$disabled_k."').prop('disabled', false);
+										}
+									}else{
+										$('input.disabled_".$value['name'].$disabled_k."').val('');
+									}
+									$('input.".$value["id"]."').change(function(){
+										if($('input[value=\"".$disabled_v."\"].".$value['name'].":checked').length == 1){
+											if($('input.disabled_".$value['name'].$disabled_k."').is(':disabled')){
+												$('input.disabled_".$value['name'].$disabled_k."').prop('disabled', false);
+											}
+										}else{
+											$('input.disabled_".$value['name'].$disabled_k."').val('');
+											$('input.disabled_".$value['name'].$disabled_k."').prop('disabled', true);
+										}
+									});
+								});</script>";
 							}
-						}else{
-							$('input.disabled_".$value['name']."').val('');
-							$('input.disabled_".$value['name']."').prop('disabled', true);
 						}
-					});
-				});</script>";
+					}
+				}
 			}
 			$field .= $errors[$value["name"]];
 		}
@@ -272,32 +294,39 @@ if(!isset($post_data['mode']) || !empty($is_error)){
 		//チェックボックス
 		if($value['type'] == 'checkbox'){
 			$field .= '<input type="hidden" id="'.$value["id"].'" name="'.$value["name"].'" value="">';
-			foreach($value['option'] as $ops){
+			foreach($value['option'] as $k => $ops){
 				$field .= '<input type="'.$value["type"].'" class="'.$value["id"].'" name="'.$value["name"].'[]" value="'.$ops.'"'.form_checked($post_data[$value["name"]],$ops).'>'.$ops.'<br>';
-			}
-			//disabled 入力項目
-			if($value['disabled'] != ''){
-				$field .= '<input type="text" class="disabled_'.$value["name"].'" id="'.$value["id"].'" name="'.$value["name"].'[]" value="'.get_disabled_data($post_data[$value["name"]]).'" disabled>';
-				$field .= "<script>
-				$(function(){
-					if($('input[value=\"".$value['disabled']."\"]:checked').length == 1){
-						if($('input.disabled_".$value['name']."').is(':disabled')){
-							$('input.disabled_".$value['name']."').prop('disabled', false);
-						}
-					}else{
-						$('input.disabled_".$value['name']."').val('');
-					}
-					$('input.".$value["id"]."').change(function(){
-						if($('input[value=\"".$value['disabled']."\"]:checked').length == 1){
-							if($('input.disabled_".$value['name']."').is(':disabled')){
-								$('input.disabled_".$value['name']."').prop('disabled', false);
+
+				//disabled 入力項目
+				if($value['disabled'] != ''){
+					if(is_array($value['disabled'])){
+						foreach ($value['disabled'] as $disabled_k => $disabled_v) {
+							if($disabled_v == $ops){
+								$field .= '<input type="text" class="disabled_'.$value["name"].$disabled_k.'" id="'.$value["id"].$disabled_k.'" name="'.$value['name'].'['.$ops.']" value="'.get_disabled_data($post_data[$value["name"]]).'" disabled>';
+								$field .= "<script>
+								$(function(){
+									if($('input[value=\"".$disabled_v."\"].".$value['name'].":checked').length == 1){
+										if($('input.disabled_".$value['name'].$disabled_k."').is(':disabled')){
+											$('input.disabled_".$value['name'].$disabled_k."').prop('disabled', false);
+										}
+									}else{
+										$('input.disabled_".$value['name'].$disabled_k."').val('');
+									}
+									$('input.".$value["id"]."').change(function(){
+										if($('input[value=\"".$disabled_v."\"].".$value['name'].":checked').length == 1){
+											if($('input.disabled_".$value['name'].$disabled_k."').is(':disabled')){
+												$('input.disabled_".$value['name'].$disabled_k."').prop('disabled', false);
+											}
+										}else{
+											$('input.disabled_".$value['name'].$disabled_k."').val('');
+											$('input.disabled_".$value['name'].$disabled_k."').prop('disabled', true);
+										}
+									});
+								});</script>";
 							}
-						}else{
-							$('input.disabled_".$value['name']."').val('');
-							$('input.disabled_".$value['name']."').prop('disabled', true);
 						}
-					});
-				});</script>";
+					}
+				}
 			}
 			$field .= $errors[$value["name"]];
 		}

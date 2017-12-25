@@ -2,7 +2,7 @@
 /*
 Package : Pegion-liquid
 Coder : M.Hoshi
-Version : 1.1.1
+Version : 1.2.0
 */
 class DB_CONTROL{
 	/*DB許可*/
