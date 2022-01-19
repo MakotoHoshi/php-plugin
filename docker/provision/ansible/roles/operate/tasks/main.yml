@@ -1,0 +1,21 @@
+---
+- name: === Modify nginx.conf file ===
+  copy:
+    src: ../../../../config/etc/nginx/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    mode: preserve
+- name: === Modify php.ini file ===
+  copy:
+    src: ../../../../config/etc/php.ini
+    dest: /etc/php.ini
+    mode: preserve
+- name: === chmod 777 -R storage ===
+  shell: chmod 777 -R storage
+  args:
+    chdir: "{{ systemdir }}"
+    warn: no
+- name: === Modify .env file ===
+  copy:
+    src: "../env/.env.{{ env }}"
+    dest: "{{ systemdir }}.env"
+    mode: 0644

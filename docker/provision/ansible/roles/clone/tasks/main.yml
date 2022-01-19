@@ -1,0 +1,14 @@
+---
+- name: === rm -rf /repo ===
+  file:
+    path: /repo
+    state: absent
+- name: === mkdir /repo ===
+  file:
+    path: /repo
+    state: directory
+- name: === git clone -b [branch] [repository] ===
+  ansible.builtin.git:
+    repo: "{{ repository }}"
+    dest: /repo/
+    version: "{{ branch }}"

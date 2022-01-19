@@ -1,0 +1,54 @@
+---
+- name: === yum update -y ===
+  yum:
+    name: "*"
+    state: latest
+- name: === yum remove -y php-* ===
+  yum:
+    name: php-*
+    state: absent
+- name: === yum update -y amazon-linux-extras ===
+  yum:
+    name: amazon-linux-extras
+    state: latest
+- name: === amazon-linux-extras install nginx1 ===
+  shell: amazon-linux-extras install -y nginx1
+- name: === amazon-linux-extras enable php8.0 ===
+  shell: amazon-linux-extras enable php8.0
+- name: === yum clean metadata ===
+  shell: yum clean metadata
+  args:
+    warn: no
+- name: === install php modules ===
+  yum:
+    name: "{{ packages }}"
+    state: present
+  vars:
+    packages:
+    - php-cli-8.0.8-1.amzn2
+    - php-pdo-8.0.8-1.amzn2
+    - php-fpm-8.0.8-1.amzn2
+    - php-mysqlnd-8.0.8-1.amzn2
+    - php-xml-8.0.8-1.amzn2
+- name: === yum install -y mariadb ===
+  yum:
+    name: mariadb-5.5.68-1.amzn2
+    state: present
+- name: === yum install -y git ===
+  yum:
+    name: git
+    state: latest
+- name: === get composer installer ===
+  shell: php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+- name: === verify composer ===
+  shell: php -r "if (hash_file('sha384', 'composer-setup.php') === '906a84df04cea2aa72f40b5f787e49f22d4c2f19492ac310e8cba5b96ac8b64115ac402c8cd292b8a03482574915d1a8') { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+- name: === setup composer ===
+  shell: php composer-setup.php
+- name: === remove composer installer ===
+  shell: php -r "unlink('composer-setup.php');"
+- name: === move composer installer ===
+  shell: mv composer.phar /usr/local/bin/composer
+- name: === Add composer path ===
+  shell: export PATH=/usr/local/bin:$PATH
+- name: === Save composer path ===
+  shell: source ~/.bash_profile

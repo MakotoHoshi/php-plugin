@@ -1,0 +1,9 @@
+---
+- name: === git fetch origin [branch] ===
+  shell: git fetch origin {{ branch }}
+  args:
+    chdir: "{{ systemdir }}"
+- name: === git checkout [branch] ===
+  shell: git checkout {{ branch }}
+  args:
+    chdir: "{{ systemdir }}"

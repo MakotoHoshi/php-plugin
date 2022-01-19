@@ -1,0 +1,5 @@
+---
+- name: === php artisan migrate ===
+  shell: php artisan migrate
+  args:
+    chdir: "{{ systemdir }}"

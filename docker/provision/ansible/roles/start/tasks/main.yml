@@ -1,0 +1,19 @@
+---
+- name: === Start and enable nginx ===
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+- name: === Start and enable php-fpm ===
+  service:
+    name: php-fpm
+    state: started
+    enabled: yes
+- name: === Start composer ===
+  composer:
+    command: install
+    working_dir: "{{ systemdir }}"
+- name: === Update composer ===
+  composer:
+    command: update
+    working_dir: "{{ systemdir }}"

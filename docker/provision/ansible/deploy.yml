@@ -1,0 +1,32 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Decrypt pem file
+      import_role:
+        name: decrypt
+- hosts: "{{ env }}"
+  become: yes
+  vars_files:
+    - variables.yml
+  tasks:
+    - name: Display start message
+      debug:
+        msg: "Start deploy."
+    - name: Install packages
+      import_role:
+        name: install
+    - name: Clone git repository
+      import_role:
+        name: clone
+    - name: Operate files
+      import_role:
+        name: operate
+    - name: Start service
+      import_role:
+        name: start
+    - name: Database migrate
+      import_role:
+        name: migrate
+    - name: Display end message
+      debug:
+        msg: "End deploy."

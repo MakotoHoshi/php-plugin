@@ -1,0 +1,16 @@
+---
+- name: === Decrypt prod_key ===
+  copy:
+    src: ../keys/prod_key.encrypt
+    dest: ../keys/prod_key.pem
+    mode: 0600
+- name: === Decrypt dev_key ===
+  copy:
+    src: ../keys/dev_key.encrypt
+    dest: ../keys/dev_key.pem
+    mode: 0600
+- name: === Decrypt variables ===
+  copy:
+    src: variables.encrypt
+    dest: variables.yml
+    mode: 0600

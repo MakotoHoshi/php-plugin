@@ -1,0 +1,23 @@
+---
+- hosts: localhost
+  tasks:
+    - name: Decrypt pem file
+      import_role:
+        name: decrypt
+- hosts: "{{ env }}"
+  become: yes
+  vars_files:
+    - variables.yml
+  tasks:
+    - name: Display start message
+      debug:
+        msg: "Start inplace deploy."
+    - name: Pull any branch
+      import_role:
+        name: pull
+    - name: Database migrate
+      import_role:
+        name: migrate
+    - name: Display end message
+      debug:
+        msg: "End inplace deploy."
